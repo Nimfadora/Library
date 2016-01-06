@@ -101,7 +101,7 @@ public class Transformer {
     }
 
     public static ReportDTO transformReport(Report report) {
-        return new ReportDTO(report.getId(), transformBook(report.getBook()), transformUser(report.getUser()),report.getRent(), report.getReturnDate());
+        return null; //new ReportDTO(report.getId(), transformBook(report.getBook()), transformUser(report.getUser()),report.getRent(), report.getReturnDate());
     }
 
     public static Report transformReportDTO(ReportDTO reportDTO) {

@@ -16,7 +16,6 @@ public class DBUserDAOImpl implements UserDAO {
     private static final String CREATE_USER = "INSERT INTO user VALUES(NULL, ?, ?, ?, ?);";
     private static final String FIND_USER = "SELECT * FROM user WHERE login = ? AND password = ?;";
     private static final String UPDATE_USER = "UPDATE user SET name = ?, password = ? WHERE id = ?;";
-    private static final String DELETE_USER = "DELETE FROM user WHERE id = ?;";
     private static final String GET_USERS = "SELECT * FROM user;";
     private static final String GET_BOOKS_IN_USER = "SELECT book.id, book.author, book.title FROM book, usertobook, user WHERE user.login = ? AND usertobook.book_id = book.id AND user.id = usertobook.user_id;";
 

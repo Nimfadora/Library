@@ -22,7 +22,7 @@ public class IMUserToBookImpl implements UserToBook {
             });
         });
         UserDAO userDAO = IMUserDAOImpl.getInstance();
-        return userDAO.getUsers(users);
+        return null; //serDAO.getUsers(users);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class IMUserToBookImpl implements UserToBook {
         books.add(book.getId());
 
         UserDAO ud = IMUserDAOImpl.getInstance();
-        ud.addBook(user.getId(), book);
+        //ud.addBook(user.getId(), book);
         BookDAO bd = IMBookDAOImpl.getInstance();
 //        bd.addUser(book.getId(), user);
 
@@ -51,7 +51,7 @@ public class IMUserToBookImpl implements UserToBook {
         books.remove(book.getId());
 
         UserDAO ud = IMUserDAOImpl.getInstance();
-        ud.deleteBook(user.getId(), book);
+        //ud.deleteBook(user.getId(), book);
         BookDAO bd = IMBookDAOImpl.getInstance();
 //        bd.deleteUser(book.getId(), user);
 

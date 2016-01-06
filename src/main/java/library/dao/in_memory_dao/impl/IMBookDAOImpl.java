@@ -10,7 +10,6 @@ import library.model.entity.User;
 import java.util.*;
 
 public class IMBookDAOImpl implements BookDAO {
-    private static Storage storage = PropertiesReader.isInMemory();
     private static volatile BookDAO dao;
 
     private IMBookDAOImpl() {
@@ -27,12 +26,15 @@ public class IMBookDAOImpl implements BookDAO {
 
     @Override
     public boolean createBook(Book book) {
+        Random random = new Random();
+        book.setId(random.nextLong());
         InMemoryStorage.booksStorage.put(book.getId(), book);
         return true;
     }
 
     @Override
     public Book findBook(long id) {
+
         return InMemoryStorage.booksStorage.get(id);
     }
 
@@ -44,6 +46,7 @@ public class IMBookDAOImpl implements BookDAO {
 
     @Override
     public boolean takeBook(Long bookId, Long userId) {
+
         return false;
     }
 
@@ -57,8 +60,6 @@ public class IMBookDAOImpl implements BookDAO {
         List<User> userLst = book.getUsers();
         userLst.add(user);
         book.setUsers(userLst);
-        //нужно создать репорт, не понятно как это лучше сделать и где
-        //и юзеру дописать книгу
         return InMemoryStorage.booksStorage.replace(book.getId(), book) != null;
     }
 
