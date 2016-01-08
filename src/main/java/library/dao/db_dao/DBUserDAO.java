@@ -1,10 +1,8 @@
-package library.dao.db_dao.impl;
+package library.dao.db_dao;
 
 import library.dao.UserDAO;
-import library.dao.storage.Storage;
 import library.helper.Closer;
 import library.helper.ConnectionFactory;
-import library.helper.PropertiesReader;
 import library.model.entity.Book;
 import library.model.entity.User;
 
@@ -12,7 +10,7 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DBUserDAOImpl implements UserDAO {
+public class DBUserDAO implements UserDAO {
     private static final String CREATE_USER = "INSERT INTO user VALUES(NULL, ?, ?, ?, ?);";
     private static final String FIND_USER = "SELECT * FROM user WHERE login = ? AND password = ?;";
     private static final String UPDATE_USER = "UPDATE user SET name = ?, password = ? WHERE id = ?;";
@@ -20,11 +18,11 @@ public class DBUserDAOImpl implements UserDAO {
     private static final String GET_BOOKS_IN_USER = "SELECT book.id, book.author, book.title FROM book, usertobook, user WHERE user.login = ? AND usertobook.book_id = book.id AND user.id = usertobook.user_id;";
 
     private static UserDAO dao;
-    private DBUserDAOImpl(){}
+    private DBUserDAO(){}
 
     public static synchronized UserDAO getInstance(){
         if(dao == null)
-            dao = new DBUserDAOImpl();
+            dao = new DBUserDAO();
         return dao;
     }
     private Connection connection;

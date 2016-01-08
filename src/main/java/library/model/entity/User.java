@@ -10,8 +10,6 @@ public class User {
     private String login;
     private String password;
     private Date birthday;
-    private List<Book> books;
-    private List<Report> reports;
 
     public User() {
     }
@@ -22,8 +20,6 @@ public class User {
         this.login = login;
         this.password = password;
         this.birthday = birthday;
-        this.books = new LinkedList<>();
-        this.reports = new LinkedList<>();
     }
 
     public long getId() {
@@ -64,22 +60,5 @@ public class User {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
-    public void addBook(Book book) {
-        if(book!=null)
-            this.books.add(book);
-    }
-    public void deleteBook(Book book) {
-        if(book!=null)
-            this.books.remove(book);
     }
 }

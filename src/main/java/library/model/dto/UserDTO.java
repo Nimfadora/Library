@@ -10,7 +10,6 @@ public class UserDTO{
     public String login;
     public String password;
     private Date birthday;
-    private List<BookDTO> books;
 
     public UserDTO() {
     }
@@ -21,7 +20,6 @@ public class UserDTO{
         this.login = login;
         this.password = password;
         this.birthday = birthday;
-        this.books = new LinkedList<BookDTO>();
     }
 
     @Override
@@ -72,18 +70,5 @@ public class UserDTO{
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
-    }
-
-    public List<BookDTO> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<BookDTO> books) {
-        this.books = books;
-    }
-
-    public void addBook(BookDTO book) {
-        if(book!=null)
-            this.books.add(book);
     }
 }

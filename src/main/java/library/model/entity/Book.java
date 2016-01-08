@@ -8,8 +8,7 @@ public class Book {
     private String author;
     private String title;
     private int count;
-    private List<User> users;
-    private List<Report> reports;
+    private List<Long> actualUsers;
 
     public Book() {
     }
@@ -19,8 +18,15 @@ public class Book {
         this.author = author;
         this.title = title;
         this.count = count;
-        this.users = new LinkedList<>();
-        this.reports = new LinkedList<>();
+        this.actualUsers = new LinkedList<>();
+    }
+
+    public List<Long> getActualUsers() {
+        return actualUsers;
+    }
+
+    public void setActualUsers(List<Long> actualUsers) {
+        this.actualUsers = actualUsers;
     }
 
     public long getId() {
@@ -55,21 +61,6 @@ public class Book {
         this.count = count;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public List<Report> getReports() {
-        return reports;
-    }
-
-    public void setReports(List<Report> reports) {
-        this.reports = reports;
-    }
 
     @Override
     public String toString() {

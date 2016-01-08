@@ -1,12 +1,10 @@
 package library.service.impl;
 
 import library.dao.ReportDAO;
-import library.dao.in_memory_dao.impl.IMReportDAOImpl;
 import library.helper.PropertiesReader;
 import library.model.dto.ReportDTO;
-import library.model.entity.Report;
 import library.service.ReportService;
-import library.transform.Transformer;
+import library.helper.Transformer;
 
 import java.util.LinkedList;
 import java.util.List;

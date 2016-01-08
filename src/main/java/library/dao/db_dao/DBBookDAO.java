@@ -1,12 +1,9 @@
-package library.dao.db_dao.impl;
+package library.dao.db_dao;
 
 import library.dao.BookDAO;
-import library.dao.storage.Storage;
 import library.helper.Closer;
 import library.helper.ConnectionFactory;
-import library.helper.PropertiesReader;
 import library.model.entity.Book;
-import library.model.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,13 +12,13 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DBBookDAOImpl implements BookDAO {
+public class DBBookDAO implements BookDAO {
     private static BookDAO dao;
-    private DBBookDAOImpl(){}
+    private DBBookDAO(){}
 
     public static synchronized BookDAO getInstance(){
         if(dao == null)
-            dao = new DBBookDAOImpl();
+            dao = new DBBookDAO();
         return dao;
     }
     private Connection connection;

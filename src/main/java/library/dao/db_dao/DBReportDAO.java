@@ -1,10 +1,8 @@
-package library.dao.db_dao.impl;
+package library.dao.db_dao;
 
 import library.dao.ReportDAO;
-import library.dao.storage.Storage;
 import library.helper.Closer;
 import library.helper.ConnectionFactory;
-import library.helper.PropertiesReader;
 import library.model.entity.Book;
 import library.model.entity.Report;
 import library.model.entity.User;
@@ -13,18 +11,18 @@ import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DBReportDAOImpl implements ReportDAO {
+public class DBReportDAO implements ReportDAO {
     private static final String CREATE_REPORT = "INSERT INTO report (book_id, user_id, rent) VALUES(?, ?, CURRENT_DATE);";
     private static final String UPDATE_REPORT = "UPDATE report SET report.return = CURRENT_DATE WHERE user_id = ? AND book_id = ?;";
     private static final String GET_REPORTS = "SELECT report.*, user.name, user.login, book.author, book.title FROM report, user, book WHERE report.book_id = book.id AND report.user_id = user.id;";
     private Connection connection;
 
     private static ReportDAO dao;
-    private DBReportDAOImpl(){}
+    private DBReportDAO(){}
 
     public static synchronized ReportDAO getInstance(){
         if(dao == null)
-            dao = new DBReportDAOImpl();
+            dao = new DBReportDAO();
         return dao;
     }
 

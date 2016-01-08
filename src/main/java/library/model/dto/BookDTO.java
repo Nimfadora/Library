@@ -1,5 +1,7 @@
 package library.model.dto;
 
+import library.model.entity.User;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -10,8 +12,7 @@ public class BookDTO {
     private String author;
     private String title;
     private int count;
-    List<UserDTO> users;
-    List<ReportDTO> reports;
+    private List<Long> actualUsers;
 
     public BookDTO(){}
     public BookDTO(long id, String author, String title, int count) {
@@ -19,8 +20,27 @@ public class BookDTO {
         this.author = author;
         this.title = title;
         this.count = count;
-        this.users = new LinkedList<UserDTO>();
-        this.reports = new LinkedList<ReportDTO>();
+        this.actualUsers = new LinkedList<>();
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public List<Long> getActualUsers() {
+        return actualUsers;
+    }
+
+    public void setActualUsers(List<Long> actualUsers) {
+        this.actualUsers = actualUsers;
     }
 
     public void setId(long id) {
@@ -43,21 +63,6 @@ public class BookDTO {
         return count;
     }
 
-    public List<ReportDTO> getReports() {
-        return reports;
-    }
-
-    public void setUsers(List<UserDTO> users) {
-        this.users = users;
-    }
-
-    public List<UserDTO> getUsers() {
-        return users;
-    }
-
-    public void setReports(List<ReportDTO> reports) {
-        this.reports = reports;
-    }
 
     @Override
     public String toString() {
@@ -66,8 +71,6 @@ public class BookDTO {
                 ", author='" + author + '\'' +
                 ", title='" + title + '\'' +
                 ", count=" + count +
-                ", users=" + users +
-                ", reports=" + reports +
                 '}';
     }
 }

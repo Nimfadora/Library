@@ -1,24 +1,20 @@
-package library.dao.in_memory_dao.impl;
+package library.dao.in_memory_dao;
 
 import library.dao.ReportDAO;
 import library.dao.storage.InMemoryStorage;
-import library.dao.storage.Storage;
-import library.helper.PropertiesReader;
 import library.model.entity.Report;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class IMReportDAOImpl implements ReportDAO {
+public class IMReportDAO implements ReportDAO {
     private static ReportDAO dao;
-    private IMReportDAOImpl(){}
+    private IMReportDAO(){}
 
     public static synchronized ReportDAO getInstance(){
         if(dao == null)
-            dao = new IMReportDAOImpl();
+            dao = new IMReportDAO();
         return dao;
     }
 
@@ -26,7 +22,7 @@ public class IMReportDAOImpl implements ReportDAO {
     public List<Report> getReports() {
        return  (List<Report>)InMemoryStorage.reportsStorage.values();
     }
-    //TODO: refactor this trash (entities(dtos') must be formed on controller layer)
+
     @Override
     public boolean createReport(Report report) {
         Random random = new Random();

@@ -1,9 +1,7 @@
-package library.dao.in_memory_dao.impl;
+package library.dao.in_memory_dao;
 
 import library.dao.UserDAO;
 import library.dao.storage.InMemoryStorage;
-import library.dao.storage.Storage;
-import library.helper.PropertiesReader;
 import library.model.entity.Book;
 import library.model.entity.User;
 
@@ -11,15 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class IMUserDAOImpl implements UserDAO {
+public class IMUserDAO implements UserDAO {
     private static UserDAO dao;
 
-    private IMUserDAOImpl() {
+    private IMUserDAO() {
     }
 
     public static synchronized UserDAO getInstance() {
         if (dao == null)
-            dao = new IMUserDAOImpl();
+            dao = new IMUserDAO();
         return dao;
     }
 
@@ -29,7 +27,7 @@ public class IMUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Long createUser(User user) {
+    public synchronized Long createUser(User user) {
         Random random = new Random();
         user.setId(random.nextLong());
         InMemoryStorage.usersStorage.put(user.getId(), user);
@@ -37,13 +35,18 @@ public class IMUserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean updateUser(User user) {
+    public synchronized boolean updateUser(User user) {
         return InMemoryStorage.usersStorage.replace(user.getId(), user) != null;
     }
 
     @Override
     public List<Book> getBooks(User user) {
-        return null;
+        List<Long> booksId = InMemoryStorage.userToBook.get(user.getId());
+        List<Book> books = new LinkedList<>();
+        booksId.forEach(id -> {
+            books.add(InMemoryStorage.booksStorage.get(id));
+        });
+        return books;
     }
 
     @Override

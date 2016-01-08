@@ -1,5 +1,3 @@
-package library.helper;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.util.List;

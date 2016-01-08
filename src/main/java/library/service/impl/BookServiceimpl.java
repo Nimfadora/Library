@@ -1,7 +1,7 @@
 package library.service.impl;
 
 import library.dao.BookDAO;
-import library.dao.in_memory_dao.impl.IMBookDAOImpl;
+import library.dao.in_memory_dao.IMBookDAO;
 import library.helper.PropertiesReader;
 import library.model.dto.BookDTO;
 import library.model.dto.ReportDTO;
@@ -9,7 +9,7 @@ import library.model.dto.UserDTO;
 import library.model.entity.Book;
 import library.service.BookService;
 import library.service.ReportService;
-import library.transform.Transformer;
+import library.helper.Transformer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,9 +45,7 @@ public class BookServiceimpl implements BookService {
     @Override
     public List<BookDTO> getBooks(){
         List<BookDTO> booksDTO = new LinkedList<>();
-        dao.getBooks().forEach(entity -> {
-            booksDTO.add(Transformer.transformBook(entity));
-        });
+        dao.getBooks().forEach(entity -> booksDTO.add(Transformer.transformBook(entity)));
         return booksDTO;
     }
 

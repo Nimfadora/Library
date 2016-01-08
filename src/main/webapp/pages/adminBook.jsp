@@ -38,12 +38,13 @@
         <c:set value="${param.author}" var="author" scope="request"/>
         <c:set value="${param.title}" var="title" scope="request"/>
         <c:set value="${param.count}" var="count" scope="request"/>
-        <jsp:forward page="book.jsp"/>
+        <jsp:forward page="adminBook.jsp"/>
     </c:if>
 </c:if>
 
 <div class="formContainer">
     <form class="form" method="post" action="book">
+        <input type="hidden" name="submitted" value="true" />
         <div class="form-group">
             <p>
                 <label for="author">Author:</label>
@@ -77,7 +78,7 @@
                 </c:if>
             </p>
 
-            <input class="btn" type="submit" value="Create"/>
+            <input class="btn-default" type="submit" value="Create"/>
         </div>
 
     </form>
