@@ -12,7 +12,7 @@ public class BookDTO {
     private String author;
     private String title;
     private int count;
-    private List<Long> actualUsers;
+    private List<Long> actualUsers = new LinkedList<>();
 
     public BookDTO(){}
     public BookDTO(long id, String author, String title, int count) {
@@ -20,7 +20,6 @@ public class BookDTO {
         this.author = author;
         this.title = title;
         this.count = count;
-        this.actualUsers = new LinkedList<>();
     }
 
     public void setAuthor(String author) {

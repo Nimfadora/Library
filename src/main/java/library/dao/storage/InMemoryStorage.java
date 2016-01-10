@@ -1,50 +1,81 @@
 package library.dao.storage;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionLikeType;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import library.model.entity.Book;
 import library.model.entity.Report;
 import library.model.entity.User;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.*;
 
-public class InMemoryStorage{
+public class InMemoryStorage {
     public static Map<Long, Report> reportsStorage = new HashMap<>();
     public static Map<Long, User> usersStorage = new HashMap<>();
     public static Map<Long, Book> booksStorage = new HashMap<>();
     public static Map<Long, List<Long>> userToBook = new HashMap<>();
+    public static final ObjectMapper MAPPER = new ObjectMapper();
+    private static ClassLoader classLoader = InMemoryStorage.class.getClassLoader();
 
-    public static void main(String[] args) {
-        load();
-        List lst = new LinkedList<>(usersStorage.values());
-        lst.forEach(item->{
-            System.out.println(item.getClass());
-        });
-    }
+    public static void load() {
 
-    private static void load(){
-        usersStorage = deserialize(usersStorage, "src/main/resources/users.json");
-        booksStorage = deserialize(booksStorage, "src/main/resources/books.json");
-        reportsStorage = deserialize(reportsStorage, "src/main/resources/reports.json");
-        userToBook = deserialize(userToBook, "src/main/resources/userToBook.json");
+        usersStorage = deserialize("users.json", resolveType(User.class));
+        booksStorage = deserialize("books.json", resolveType(Book.class));
+        reportsStorage = deserialize("reports.json", resolveType(Report.class));
+        userToBook = deserialize("userToBook.json", resolveListType(Long.class));
         System.out.println("deserialization successful");
     }
-    private static <T> Map<Long, T> deserialize(Map<Long, T> map, String filename){
-        try
-        {
+
+    public static void save() {
+        serialize(usersStorage, "users.json");
+        serialize(booksStorage, "books.json");
+        serialize(reportsStorage, "reports.json");
+        serialize(userToBook, "userToBook.json");
+        System.out.println("serialization successful");
+    }
+
+    private static <T> void serialize(Map<Long, T> map, String filename) {
+        try {
             ObjectMapper mapper = new ObjectMapper();
-            FileInputStream in = new FileInputStream(filename);
+            FileOutputStream out = new FileOutputStream(Paths.get(classLoader.getResource(filename).toURI()).toFile());
+            ObjectOutputStream oos = new ObjectOutputStream(out);
+            mapper.writeValue(oos, map);
+            oos.close();
+            out.close();
+            System.out.printf("Serialized Map data is saved in" + filename);
+        } catch (IOException | URISyntaxException | NullPointerException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    private static <T> Map<Long, T> deserialize(String filename, MapType valueType) {
+        Map<Long, T> map = null;
+        try {
+            FileInputStream in = new FileInputStream(Paths.get(classLoader.getResource(filename).toURI()).toFile());
             ObjectInputStream ois = new ObjectInputStream(in);
-            map = mapper.readValue(ois, new TypeReference<Map<Long, T>>() {});
+            map = MAPPER.readValue(ois, valueType);
             ois.close();
             in.close();
             System.out.println("Deserialized Map data from " + filename);
-        }catch(IOException ioe)
-        {
+        } catch (IOException | URISyntaxException | NullPointerException ioe) {
             ioe.printStackTrace();
         }
         return map;
+    }
+
+    private static <T> MapType resolveType(Class<T> valueType) {
+        TypeFactory typeFactory = MAPPER.getTypeFactory();
+        return typeFactory.constructMapType(HashMap.class, Long.class, valueType);
+    }
+
+
+    private static <T> MapType resolveListType(Class<T> valueType) {
+        TypeFactory typeFactory = MAPPER.getTypeFactory();
+        CollectionLikeType collectionLikeType = typeFactory.constructCollectionLikeType(List.class, valueType);
+        return typeFactory.constructMapType(HashMap.class, Long.class, collectionLikeType.getRawClass());
     }
 }

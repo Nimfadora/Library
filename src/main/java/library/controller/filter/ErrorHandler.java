@@ -2,6 +2,7 @@ package library.controller.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import library.exception.*;
+import library.helper.PropertiesReader;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -14,7 +15,7 @@ public class ErrorHandler implements Filter{
     private static ObjectMapper mapper;
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        PropertiesReader.generateSources();
     }
 
     @Override
@@ -40,6 +41,6 @@ public class ErrorHandler implements Filter{
 
     @Override
     public void destroy() {
-
+        PropertiesReader.saveChanges();
     }
 }

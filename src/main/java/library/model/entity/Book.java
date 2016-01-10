@@ -8,7 +8,7 @@ public class Book {
     private String author;
     private String title;
     private int count;
-    private List<Long> actualUsers;
+    private List<Long> actualUsers = new LinkedList<>();
 
     public Book() {
     }

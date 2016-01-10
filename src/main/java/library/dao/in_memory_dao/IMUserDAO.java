@@ -66,11 +66,13 @@ public class IMUserDAO implements UserDAO {
 
     @Override
     public List<Book> getBooks(User user) {
-        List<Long> booksId = InMemoryStorage.userToBook.get(user.getId());
         List<Book> books = new LinkedList<>();
-        booksId.forEach(id -> {
-            books.add(InMemoryStorage.booksStorage.get(id));
-        });
+        if(InMemoryStorage.userToBook.get(user.getId()) != null) {
+            List<Long> booksId = new LinkedList<>(InMemoryStorage.userToBook.get(user.getId()));
+            booksId.forEach(id -> {
+                books.add(InMemoryStorage.booksStorage.get(id));
+            });
+        }
         return books;
     }
 

@@ -17,10 +17,6 @@ public class CreateBookServlet extends HttpServlet{
         String author = request.getParameter("author");
         String title = request.getParameter("title");
         String count = request.getParameter("count");
-        if (author != null && title != null && count != null)
-            System.out.println("author='" + author + '\'' +
-                    ", title='" + title + '\'' +
-                    ", count=" + count);
         BookDTO bookDTO = new BookDTO(100, author, title, Integer.valueOf(count != null ? count : "0") );
         BookServiceimpl.getInstance().createBook(bookDTO);
         response.sendRedirect("/admin/book");

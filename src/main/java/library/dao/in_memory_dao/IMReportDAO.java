@@ -5,6 +5,7 @@ import library.dao.storage.InMemoryStorage;
 import library.model.entity.Report;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -20,7 +21,7 @@ public class IMReportDAO implements ReportDAO {
 
     @Override
     public List<Report> getReports() {
-       return  (List<Report>)InMemoryStorage.reportsStorage.values();
+       return  new LinkedList<>(InMemoryStorage.reportsStorage.values());
     }
 
     @Override
