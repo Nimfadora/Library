@@ -13,12 +13,12 @@ public class Book {
     public Book() {
     }
 
-    public Book(long id, String author, String title, int count) {
+    public Book(long id, String author, String title, int count, List<Long> actualUsers) {
         this.id = id;
         this.author = author;
         this.title = title;
         this.count = count;
-        this.actualUsers = new LinkedList<>();
+        this.actualUsers = actualUsers;
     }
 
     public List<Long> getActualUsers() {

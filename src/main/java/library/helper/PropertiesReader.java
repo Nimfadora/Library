@@ -11,6 +11,9 @@ import library.dao.in_memory_dao.IMReportDAO;
 import library.dao.in_memory_dao.IMUserDAO;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class PropertiesReader {
@@ -19,14 +22,17 @@ public class PropertiesReader {
     private static Boolean isInMemory(){
         if(inMemory == null){
             Properties properties = new Properties();
-            try(InputStream input = new FileInputStream("src/main/java/library/resources/properties.properties")){
-                properties.load(input);
-                String property = properties.getProperty("inMemory");
-                if(property != null)
-                    inMemory = Boolean.getBoolean(property);
-                System.out.println(inMemory);
-            } catch (IOException e) {
-                e.printStackTrace();
+            URL resource = PropertiesReader.class.getClassLoader().getResource("properties.properties");
+            if (resource != null) {
+                try(InputStream input = new FileInputStream(Paths.get(resource.toURI()).toFile())){
+                    properties.load(input);
+                    String property = properties.getProperty("inMemory");
+                    if(property != null)
+                        inMemory = Boolean.parseBoolean(property);
+                    System.out.println(inMemory);
+                } catch (IOException | URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return (inMemory != null && inMemory);

@@ -1,6 +1,8 @@
 package library.dao.db_dao;
 
 import library.dao.UserDAO;
+import library.exception.LoginAlreadyExistsException;
+import library.exception.UserNotFoundException;
 import library.helper.Closer;
 import library.helper.ConnectionFactory;
 import library.model.entity.Book;
@@ -11,11 +13,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DBUserDAO implements UserDAO {
-    private static final String CREATE_USER = "INSERT INTO user VALUES(NULL, ?, ?, ?, ?);";
-    private static final String FIND_USER = "SELECT * FROM user WHERE login = ? AND password = ?;";
+    private static final String CREATE_USER = "INSERT INTO user (name, login, password, birthday) VALUES(?, ?, ?, ?);";
+    private static final String FIND_USER = "SELECT id, role FROM user WHERE login = ? AND password = ?;";
+    private static final String FIND_USER_BY_ID = "SELECT id, role FROM user WHERE id = ?;";
     private static final String UPDATE_USER = "UPDATE user SET name = ?, password = ? WHERE id = ?;";
     private static final String GET_USERS = "SELECT * FROM user;";
-    private static final String GET_BOOKS_IN_USER = "SELECT book.id, book.author, book.title FROM book, usertobook, user WHERE user.login = ? AND usertobook.book_id = book.id AND user.id = usertobook.user_id;";
+    private static final String GET_BOOKS_IN_USER = "SELECT book.id, book.author, book.title, book.count FROM book, usertobook WHERE usertobook.book_id = book.id AND usertobook.user_id = ?;";
 
     private static UserDAO dao;
     private DBUserDAO(){}
@@ -28,27 +31,48 @@ public class DBUserDAO implements UserDAO {
     private Connection connection;
 
     @Override
-    public User findUser(User user) {
-        User getUser = new User();
+    public User findUserById(User user) {
+        User userRes = null;
         try {
             connection = ConnectionFactory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(FIND_USER);
-            statement.setString(1, user.getLogin());
-            statement.setString(2, user.getPassword());
+            PreparedStatement statement = connection.prepareStatement(FIND_USER_BY_ID);
+            statement.setLong(1, user.getId());
             ResultSet rs = statement.executeQuery();
-            while (rs.next()){
-                getUser.setId(rs.getLong(1));
-                getUser.setName(rs.getString(2));
-                getUser.setLogin(rs.getString(3));
-                getUser.setPassword(rs.getString(4));
-                getUser.setBirthday(rs.getDate(5));
+            if(rs.next()) {
+                userRes = new User();
+                userRes.setId(rs.getLong(1));
+                userRes.setRole(rs.getString(2));
             }
         } catch (SQLException e) {
             System.out.println("Unable to find user with id = " + user.getId());
         }finally {
             Closer.close(connection);
         }
-        return user;
+        return userRes;
+    }
+
+    @Override
+    public User findUser(User user) {
+        User userRes = null;
+        try {
+            connection = ConnectionFactory.getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_USER);
+            statement.setString(1, user.getLogin());
+            statement.setString(2, user.getPassword());
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+                userRes = new User();
+                userRes.setId(rs.getLong(1));
+                userRes.setRole(rs.getString(2));
+            }else{
+                throw new UserNotFoundException("Invalid username or password");
+            }
+        } catch (SQLException e) {
+            System.out.println("Unable to find user with id = " + user.getId());
+        }finally {
+            Closer.close(connection);
+        }
+        return userRes;
     }
 
     @Override
@@ -63,7 +87,7 @@ public class DBUserDAO implements UserDAO {
             statement.setDate(4, new Date(user.getBirthday().getTime()));
             id = (long) statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Unable to create book with id = " + user.getId());
+            throw new LoginAlreadyExistsException("This login already exists");
         }finally {
             Closer.close(connection);
         }
@@ -100,6 +124,7 @@ public class DBUserDAO implements UserDAO {
                 book.setId(rs.getLong(1));
                 book.setAuthor(rs.getString(2));
                 book.setTitle(rs.getString(3));
+                book.setCount(rs.getInt(4));
                 books.add(book);
             }
         } catch (SQLException e) {
@@ -124,6 +149,8 @@ public class DBUserDAO implements UserDAO {
                 user.setName(rs.getString(2));
                 user.setLogin(rs.getString(3));
                 user.setBirthday(rs.getDate(5));
+                user.setRole(rs.getString(6));
+                users.add(user);
             }
         } catch (SQLException e) {
             System.out.println("Unable to get users");

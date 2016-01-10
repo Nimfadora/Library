@@ -1,6 +1,7 @@
 package library.dao.db_dao;
 
 import library.dao.BookDAO;
+import library.exception.DeleteBookException;
 import library.helper.Closer;
 import library.helper.ConnectionFactory;
 import library.model.entity.Book;
@@ -27,7 +28,6 @@ public class DBBookDAO implements BookDAO {
     private static final String UPDATE_BOOK_COUNT = "UPDATE book SET book.count = book.count - ? WHERE id = ? AND book.count > 0;";
     private static final String DELETE_BOOK = "DELETE FROM book WHERE id = ? AND id NOT IN(SELECT book_id FROM usertobook);";
     private static final String GET_BOOKS = "SELECT * FROM book;";
-//    private static final String GET_USERS_WITH_BOOK = "SELECT * FROM usertobook WHERE book_id = ?;";
     private static final String TAKE_BOOK = "INSERT INTO usertobook VALUES (?, ?);";
     private static final String RETURN_BOOK = "DELETE FROM usertobook WHERE user_id = ? AND book_id = ?;";
 
@@ -69,18 +69,18 @@ public class DBBookDAO implements BookDAO {
     }
 
     @Override
-    public boolean deleteBook(Long id) {
+    public boolean deleteBook(Long id){
         Boolean res = false;
         try {
             connection = ConnectionFactory.getConnection();
             connection.setAutoCommit(false);
             PreparedStatement statement = connection.prepareStatement(DELETE_BOOK);
             statement.setLong(1, id);
-            int effectedRows = statement.executeUpdate();
-            if(effectedRows > 0){
-                res = true;
-            }
+            res = statement.executeUpdate()>0;
             connection.commit();
+            if(!res){
+                throw new DeleteBookException("Book cannot be deleted. It is taken by the user.");
+            }
         }catch (SQLException e){
             System.out.println("Unable to delete book with id = "+id);
         }finally {
@@ -103,7 +103,7 @@ public class DBBookDAO implements BookDAO {
                 PreparedStatement statement = connection.prepareStatement(TAKE_BOOK);
                 statement.setLong(1, user_id);
                 statement.setLong(2, book_id);
-                res = statement.execute();
+                res = statement.executeUpdate()>0;
             }
             connection.commit();
         } catch (SQLException e) {
@@ -128,8 +128,9 @@ public class DBBookDAO implements BookDAO {
                 PreparedStatement statement = connection.prepareStatement(RETURN_BOOK);
                 statement.setLong(1, user_id);
                 statement.setLong(2, book_id);
-                res = statement.execute();
+                res = statement.executeUpdate()>0;
             }
+            connection.commit();
         }catch (SQLException e){
             System.out.println("Unable to return book with id = "+book_id+" from user with id = "+user_id);
         }finally {
@@ -159,28 +160,3 @@ public class DBBookDAO implements BookDAO {
         return books;
     }
 }
-
-//    @Override
-//    public Book findBook(long id) {
-//        Book book = new Book();
-//        try {
-//            connection = ConnectionFactory.getConnection();
-//            PreparedStatement conditionStatement = connection.prepareStatement(GET_USERS_WITH_BOOK);
-//            conditionStatement.setLong(1, book.getId());
-//            ResultSet rs = conditionStatement.executeQuery();
-//            //if r.size=0
-//            PreparedStatement statement = connection.prepareStatement(FIND_BOOK);
-//            statement.setLong(1, id);
-//            rs = statement.executeQuery();
-//            rs.next();
-//            book.setId(rs.getInt(1));
-//            book.setAuthor(rs.getString(2));
-//            book.setTitle(rs.getString(3));
-//            book.setCount(rs.getInt(4));
-//        } catch (SQLException e) {
-//            System.out.println("Cannot find book with id = "+id);
-//        }finally {
-//            Closer.close(connection);
-//        }
-//        return book;
-//    }

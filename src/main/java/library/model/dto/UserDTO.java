@@ -10,6 +10,7 @@ public class UserDTO{
     public String login;
     public String password;
     private Date birthday;
+    private String role;
 
     public UserDTO() {
     }
@@ -30,6 +31,14 @@ public class UserDTO{
                 ", login='" + login+
                 "', birthday=" + birthday+
                 '}';
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public long getId() {

@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface UserDAO {
 
+    public User findUserById(User user);
+
     public User findUser(User user);
 
     public Long createUser(User user);
@@ -17,5 +19,4 @@ public interface UserDAO {
 
     public List<User> getUsers();
 
-    //TODO: maybe when we tap on user the program should reveal his report
 }

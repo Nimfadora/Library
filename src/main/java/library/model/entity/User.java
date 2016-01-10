@@ -10,16 +10,26 @@ public class User {
     private String login;
     private String password;
     private Date birthday;
+    private String role;
 
     public User() {
     }
 
-    public User(long id, String name, String login, String password, Date birthday) {
+    public User(long id, String name, String login, String password, Date birthday, String role) {
         this.id = id;
         this.name = name;
         this.login = login;
         this.password = password;
         this.birthday = birthday;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public long getId() {
@@ -60,5 +70,17 @@ public class User {
 
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", birthday=" + birthday +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package library.service.impl;
 
 import library.dao.BookDAO;
 import library.dao.in_memory_dao.IMBookDAO;
+import library.exception.DeleteBookException;
 import library.helper.PropertiesReader;
 import library.model.dto.BookDTO;
 import library.model.dto.ReportDTO;
@@ -38,7 +39,7 @@ public class BookServiceimpl implements BookService {
     }
 
     @Override
-    public boolean deleteBook(Long id) {
+    public boolean deleteBook(Long id){
         return dao.deleteBook(id);
     }
 

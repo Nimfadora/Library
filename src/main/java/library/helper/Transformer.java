@@ -19,22 +19,28 @@ public class Transformer {
             user.setPassword(userDTO.getPassword());
             user.setName(userDTO.getName());
             user.setBirthday(userDTO.getBirthday());
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return user;
     }
 
     public static UserDTO transformUser(User user) {
-        UserDTO userDTO = new UserDTO();
-        try {
-            userDTO.setId(user.getId());
-            userDTO.setLogin(user.getLogin());
-            userDTO.setPassword(user.getPassword());
-            userDTO.setName(user.getName());
-            userDTO.setBirthday(user.getBirthday());
-        }catch (NullPointerException e){
-            e.printStackTrace();
+        UserDTO userDTO;
+        if (user == null)
+            userDTO = null;
+        else {
+            userDTO = new UserDTO();
+            try {
+                userDTO.setId(user.getId());
+                userDTO.setRole(user.getRole());
+                userDTO.setLogin(user.getLogin());
+                userDTO.setPassword(user.getPassword());
+                userDTO.setName(user.getName());
+                userDTO.setBirthday(user.getBirthday());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
         return userDTO;
     }
@@ -42,7 +48,7 @@ public class Transformer {
     public static Book transformBookDTO(BookDTO bookDTO) {
         List<Long> usersId = new LinkedList<>();
         List<Long> usersDTOId = bookDTO.getActualUsers();
-        if (usersDTOId.size() > 0)
+        if (usersDTOId != null && usersDTOId.size() > 0)
             usersDTOId.forEach(usersId::add);
         Book book = new Book();
         book.setId(bookDTO.getId());
@@ -53,10 +59,10 @@ public class Transformer {
         return book;
     }
 
-    public static BookDTO transformBook(Book book){
+    public static BookDTO transformBook(Book book) {
         List<Long> usersDTOId = new LinkedList<>();
         List<Long> usersId = book.getActualUsers();
-        if (usersId.size() > 0)
+        if (usersId != null && usersId.size() > 0)
             usersId.forEach(usersDTOId::add);
         BookDTO bookDTO = new BookDTO();
         bookDTO.setId(book.getId());
@@ -75,7 +81,7 @@ public class Transformer {
         try {
             reportDTO.setRent(report.getRent());
             reportDTO.setReturnDate(report.getReturnDate());
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return reportDTO;

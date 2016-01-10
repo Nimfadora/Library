@@ -24,8 +24,12 @@ public class UserServiceimpl implements UserService {
 
     @Override
     public UserDTO findUser(UserDTO userDTO) {
-        User user = dao.findUser(Transformer.transformUserDTO(userDTO));
-        return Transformer.transformUser(user);
+        return Transformer.transformUser(dao.findUser(Transformer.transformUserDTO(userDTO)));
+    }
+
+    @Override
+    public UserDTO findUserById(UserDTO userDTO) {
+        return Transformer.transformUser(dao.findUserById(Transformer.transformUserDTO(userDTO)));
     }
 
     @Override
